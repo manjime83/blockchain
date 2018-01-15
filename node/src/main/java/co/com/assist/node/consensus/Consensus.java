@@ -46,11 +46,13 @@ public class Consensus {
 			PeerHandler handler = new PeerHandler(socket);
 			new Thread(handler).start();
 			connectToPeer(handler);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
+	}
+
+	public void removePeer(PeerHandler handler) {
+		peers.remove(handler);
 	}
 
 	public void broadcast(List<Block> blocks) {
@@ -66,11 +68,7 @@ public class Consensus {
 		System.out.println("broadcasting " + json);
 
 		getPeerHandlers().forEach(handler -> {
-			if (handler.isAlive() && !handler.getSocket().isClosed()) {
-				handler.write(json);
-			} else {
-				peers.remove(handler);
-			}
+			handler.write(json);
 		});
 	}
 
@@ -90,11 +88,7 @@ public class Consensus {
 		System.out.println("broadcasting " + json);
 
 		getPeerHandlers().forEach(handler -> {
-			if (handler.isAlive() && !handler.getSocket().isClosed()) {
-				handler.write(json);
-			} else {
-				peers.remove(handler);
-			}
+			handler.write(json);
 		});
 	}
 
@@ -106,11 +100,7 @@ public class Consensus {
 		System.out.println("broadcasting " + json);
 
 		getPeerHandlers().forEach(handler -> {
-			if (handler.isAlive() && !handler.getSocket().isClosed()) {
-				handler.write(json);
-			} else {
-				peers.remove(handler);
-			}
+			handler.write(json);
 		});
 	}
 }

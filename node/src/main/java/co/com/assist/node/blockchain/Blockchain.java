@@ -30,7 +30,7 @@ public class Blockchain {
 		return instance;
 	}
 
-	private List<Block> blocks = Collections.synchronizedList(new ArrayList<Block>());
+	private List<Block> blocks = new ArrayList<Block>();
 
 	private Blockchain() {
 		addBlock(GENESIS_BLOCK);

@@ -1,6 +1,5 @@
 package co.com.assist.node;
 
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -30,10 +29,8 @@ public class Node implements Runnable {
 			System.out.println(jsonElement);
 			NodeConfig nodeConfig = new GsonBuilder().create().fromJson(jsonElement, NodeConfig.class);
 			new Node(nodeConfig).run();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.err.println(e.getMessage());
 		}
 	}
 
@@ -87,7 +84,7 @@ public class Node implements Runnable {
 						Consensus.getInstance().connectToPeer(handler);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					System.err.println(e.getMessage());
 				}
 			}
 		}).start();

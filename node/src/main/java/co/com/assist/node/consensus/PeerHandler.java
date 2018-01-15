@@ -52,7 +52,7 @@ public class PeerHandler extends Thread {
 					Block latestBlockHeld = Blockchain.getInstance().getLastBlock();
 
 					if (latestBlockReceived.getIndex() > latestBlockHeld.getIndex()) {
-						System.out.println("blockchain possibly behind. We got: " + latestBlockHeld.getIndex()
+						System.out.println("Blockchain possibly behind. We got: " + latestBlockHeld.getIndex()
 								+ " Peer got: " + latestBlockReceived.getIndex());
 						if (Blockchain.getInstance().addBlock(latestBlockReceived)) {
 							System.out.println("We can append the received block to our chain");
@@ -61,11 +61,13 @@ public class PeerHandler extends Thread {
 							System.out.println("We have to query the chain from our peer");
 							Consensus.getInstance().queryAllBlocks();
 						} else {
-							System.out.println("Received blockchain is not longer than current blockchain. Do nothing");
 							if (Blockchain.getInstance().replaceChain(receivedBlocks)) {
 								System.out.println(
 										"Received blockchain is valid. Replacing current blockchain with received blockchain");
 								Consensus.getInstance().broadcast(latestBlockReceived);
+							} else {
+								System.out.println(
+										"Received blockchain is not longer than current blockchain. Do nothing");
 							}
 						}
 					} else {
@@ -87,6 +89,7 @@ public class PeerHandler extends Thread {
 			}
 		} catch (IOException e) {
 			System.err.println("Connection failed to peer: " + socket.getInetAddress() + ":" + socket.getPort());
+			Consensus.getInstance().removePeer(this);
 		} finally {
 			try {
 				socket.close();
